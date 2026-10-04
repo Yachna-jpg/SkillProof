@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(request, { params }) {
   try {
@@ -27,11 +28,20 @@ export async function GET(request, { params }) {
       .select('*')
       .eq('assessment_id', assessment.id);
 
-    return NextResponse.json({
-      assessment,
-      answers: answers || [],
-      proofs: proofs || []
-    });
+    return new NextResponse(
+      JSON.stringify({
+        assessment,
+        answers: answers || [],
+        proofs: proofs || []
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+        }
+      }
+    );
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

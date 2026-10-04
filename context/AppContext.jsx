@@ -18,7 +18,7 @@ export function AppProvider({ children }) {
   const fetchWorkerById = async (workerId) => {
     if (!workerId) return null;
     try {
-      const res = await fetch(`/api/workers?id=${workerId}`);
+      const res = await fetch(`/api/workers?id=${workerId}&t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         setWorker(data.worker);
@@ -34,7 +34,7 @@ export function AppProvider({ children }) {
   const fetchAssessmentById = async (assessmentId) => {
     if (!assessmentId) return null;
     try {
-      const res = await fetch(`/api/assessments/${assessmentId}`);
+      const res = await fetch(`/api/assessments/${assessmentId}?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         setAssessment(data.assessment);

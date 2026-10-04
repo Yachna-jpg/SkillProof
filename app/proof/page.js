@@ -2,7 +2,7 @@
 
 import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Camera, CheckCircle } from 'lucide-react';
+import { Camera, Image as ImageIcon, CheckCircle, ArrowRight } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
 function ProofContent() {
@@ -78,44 +78,80 @@ function ProofContent() {
   };
 
   return (
-    <div className="content">
-      <h2>{t.proof_title}</h2>
+    <div className="content" style={{ gap: '1.25rem', justifyContent: 'space-between' }}>
+      <div style={{ width: '100%', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#002D62', margin: '0 0 0.4rem 0' }}>
+          {t.proof_title}
+        </h2>
+        <p style={{ fontSize: '14px', color: '#666666', margin: 0 }}>
+          Upload a clear photo of your work or wiring for assessor review.
+        </p>
+      </div>
       
       {photoUrl && (
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
-          <img src={photoUrl} alt="Preview" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', objectFit: 'cover' }} />
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '0.5rem 0' }}>
+          <img 
+            src={photoUrl} 
+            alt="Preview" 
+            style={{ 
+              maxWidth: '100%', 
+              maxHeight: '260px', 
+              borderRadius: '16px', 
+              objectFit: 'cover',
+              border: '2px solid #002D62',
+              boxShadow: '0 4px 12px rgba(0, 45, 98, 0.12)'
+            }} 
+          />
         </div>
       )}
       
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', justifyContent: 'center' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', justifyContent: 'center' }}>
         <input type="file" accept="image/jpeg, image/png" capture="environment" id="cameraInput" style={{ display: 'none' }} onChange={handleFile} />
         <input type="file" accept="image/jpeg, image/png" id="galleryInput" style={{ display: 'none' }} onChange={handleFile} />
         
-        <button type="button" className="btn btn-secondary" onClick={() => document.getElementById('cameraInput')?.click()}>
-          <Camera size={24} /> {t.take_photo}
+        <button 
+          type="button" 
+          className="btn-secondary" 
+          onClick={() => document.getElementById('cameraInput')?.click()}
+        >
+          <Camera size={20} />
+          <span>{t.take_photo}</span>
         </button>
-        <button type="button" className="btn btn-secondary" onClick={() => document.getElementById('galleryInput')?.click()}>
-          🖼️ {t.choose_gallery}
+
+        <button 
+          type="button" 
+          className="btn-secondary" 
+          onClick={() => document.getElementById('galleryInput')?.click()}
+        >
+          <ImageIcon size={20} />
+          <span>{t.choose_gallery}</span>
         </button>
-        {errorMsg && <p style={{ color: 'red', textAlign: 'center' }}>{errorMsg}</p>}
+
+        {errorMsg && (
+          <p style={{ color: '#DC2626', textAlign: 'center', fontSize: '13px', fontWeight: '500' }}>
+            {errorMsg}
+          </p>
+        )}
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', width: '100%', position: 'relative' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem', width: '100%', marginTop: 'auto' }}>
         <button 
-          className="btn btn-secondary" 
+          type="button"
+          className="btn-secondary" 
           onClick={() => finalize(true, null)} 
-          style={{ flex: 1 }} 
           disabled={isSubmitting}
         >
           {t.skip}
         </button>
+
         <button 
-          className="btn" 
+          type="button"
+          className="btn-primary" 
           onClick={() => finalize(false, photoBase64)} 
-          style={{ flex: 1 }} 
           disabled={!photoBase64 || isSubmitting}
         >
-          {isSubmitting ? t.submitting : t.submit_photo} <CheckCircle size={24} />
+          <span>{isSubmitting ? t.submitting : t.submit_photo}</span>
+          <CheckCircle size={18} />
         </button>
       </div>
     </div>

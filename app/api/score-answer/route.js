@@ -20,12 +20,12 @@ async function getAIResult(systemPrompt, userPrompt, retryCount = 0) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-120b',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0,
+        temperature: 0.1,
         response_format: { type: "json_object" }
       })
     });
@@ -39,12 +39,12 @@ async function getAIResult(systemPrompt, userPrompt, retryCount = 0) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'llama-3.1-8b-instant',
+          model: 'openai/gpt-oss-20b',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt }
           ],
-          temperature: 0,
+          temperature: 0.1,
           response_format: { type: "json_object" }
         })
       });

@@ -2,12 +2,14 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET() {
   try {
     const { data: assessments, error } = await supabase
       .from('assessments')
-      .select('*, workers(name, phone, language)');
+      .select('*, workers(name, phone, language)')
+      .order('created_at', { ascending: false });
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -32,7 +34,16 @@ export async function GET() {
     });
 
     list.sort((a, b) => (b.needsCheck === true) - (a.needsCheck === true));
-    return NextResponse.json({ assessments: list });
+    return new NextResponse(
+      JSON.stringify({ assessments: list }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+        }
+      }
+    );
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
